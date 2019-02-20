@@ -13,7 +13,7 @@ $app->get('/cidades', function (Request $request, Response $response, array $arg
         $myPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $myPDO->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-        $sql_query = "SELECT idlocalidade, nome FROM painel_ambiental.localidades ORDER BY nome ASC";
+        $sql_query = "SELECT idlocalidade, cod_ibge, nome FROM painel_ambiental.localidades ORDER BY nome ASC";
         // $sql_query = "SHOW TABLES";
 
         $sth = $myPDO->query("SET search_path TO painel_ambiental, public");
@@ -31,11 +31,13 @@ $app->get('/cidades', function (Request $request, Response $response, array $arg
 });
 
 $app->get('/cidades/{cidade_id}', function (Request $request, Response $response, array $args) {
-    $cidade_id = $args['cidade_id'];
+    // $cidade_id = $args['cidade_id'];
 
-    $array = array(
-        "id" => $cidade_id
-    );
+    // $array = array(
+    //     "id" => $cidade_id
+    // );
+
+    $data_hoje = ''
 
     try{
         $myPDO = new PDO("pgsql:host=localhost;dbname=meioambiente", "postgres", "meioambiente");
