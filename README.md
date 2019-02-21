@@ -39,10 +39,10 @@ O App está configurado para receber apenas solicitações HTTP do tipo GET com 
   "localidade": "Ilhéus",
   "previsoes": [
     {
-    "tipo": {
-        "id": 5,
-        "previsao": "Chuvas fracas",
-        "icone": "icone-condicoes-05.png"
+      "tipo": {
+          "id": 5,
+          "previsao": "Chuvas fracas",
+          "icone": "icone-condicoes-05.png"
       },
       "temperatura_min": 27,
       "temperatura_max": 35,
