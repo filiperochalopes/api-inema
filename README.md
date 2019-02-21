@@ -11,13 +11,16 @@ Instale primeiramente o banco de dados **postgrSQL** que contenha o bando de dad
     - tipoprevisao
     
 Depois execute na pasta do projeto:
+
 ```bash
 composer.phar start
 ```
+
 Para modificar a porta padrão basta modificar o script *start* em *composer.json*
 
 ## Utilização
 O App está configurado para receber apenas solicitações HTTP do tipo GET com as seguintes rotas
+
 **/cidades**
 ```json
 [
@@ -25,7 +28,7 @@ O App está configurado para receber apenas solicitações HTTP do tipo GET com 
     "idlocalidade": 214,
     "cod_ibge": "2900702",
     "nome": "Alagoinhas"
-  }, /*...*/
+  }, ...
 ]
 ```
 
@@ -46,7 +49,7 @@ O App está configurado para receber apenas solicitações HTTP do tipo GET com 
       "vento_direcao": null,
       "vento_max": null,
       "data_previsao": "2019-02-17"
-    }, /*...*/
+    }, ...
   ]
 }
 ```
