@@ -40,14 +40,14 @@ $app->get('/cidades', function (Request $request, Response $response, array $arg
         previsoes: [ ...lista com previsões a partir de hoje ]
     }
 */
-$app->get('/cidades/{localidade_id}', function (Request $request, Response $response, array $args) {
-    $city_id = $args['localidade_id'];
+$app->get('/cidades/{cod_ibge}', function (Request $request, Response $response, array $args) {
+    $cod_ibge = $args['cod_ibge'];
 
     //Data de hoje para fins de teste, substituir depois pela função date() PHP
     $today = '2019-02-10';
 
     //Caso tenha algum id prossegue
-    if($city_id){
+    if($cod_ibge){
         try{
             $myPDO = new PDO("pgsql:host=localhost;dbname=meioambiente", "postgres", "meioambiente");
             $myPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -61,20 +61,20 @@ $app->get('/cidades/{localidade_id}', function (Request $request, Response $resp
             $tipos_previsao = $statement1->fetchAll(PDO::FETCH_ASSOC);
 
             // Query para capturar o nome e id da localidade requerida
-            $sql_query2 = "SELECT idlocalidade, nome FROM painel_ambiental.localidades WHERE idlocalidade = $city_id";
-            $statement2 = $myPDO->query($sql_query2);
-            if($statement2->rowCount() <= 0){
-                return $response->withJson(array(
-                    "erro" => "Localidade não cadastrada em \"painel_ambiental.localidades\""
-                ));
-            }
+            // $sql_query2 = "SELECT idlocalidade, nome FROM painel_ambiental.localidades WHERE idlocalidade = $cod_ibge";
+            // $statement2 = $myPDO->query($sql_query2);
+            // if($statement2->rowCount() <= 0){
+            //     return $response->withJson(array(
+            //         "erro" => "Localidade não cadastrada em \"painel_ambiental.localidades\""
+            //     ));
+            // }
             // Caso exista a localidade adiciona os dados ao array
-            foreach ($statement2->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                $result["id"] = $row["idlocalidade"];
-                $result["localidade"] = $row["nome"];
-            }
+            // foreach ($statement2->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            //     $result["id"] = $row["idlocalidade"];
+            //     $result["localidade"] = $row["nome"];
+            // }
 
-            $sql_query3 = "SELECT idtipoprevisao, temperaturamin, temperaturamax, ventodirecao, ventomax, dataprevisao FROM painel_ambiental.previsaoclimatologica WHERE deletado = false AND idlocalidade = $city_id AND dataprevisao >= '$today' ORDER BY dataprevisao ASC";
+            $sql_query3 = "SELECT tipo_previsao, temperatura_min, temperatura_max, vento_direcao, vento_max, dtc_previsao FROM painel_ambiental.vw_previsaoclimatologica WHERE cod_ibge = '$cod_ibge' AND dtc_previsao >= '$today' ORDER BY dtc_previsao ASC";
             $statement3 = $myPDO->query($sql_query3);
             
             $result["previsoes"] = array();
@@ -83,14 +83,14 @@ $app->get('/cidades/{localidade_id}', function (Request $request, Response $resp
             if($statement3->rowCount() > 0){
                 foreach ($statement3->fetchAll(PDO::FETCH_ASSOC) as $row) {
                     // Verifica tipo de previsao e adiciona um array associativo correspondente
-                    $tipo = get_previsao($row["idtipoprevisao"], $tipos_previsao);
+                    // $tipo = get_previsao($row["idtipoprevisao"], $tipos_previsao);
                     $previsao = array(
-                        "tipo" => $tipo,
-                        "temperatura_min" => $row["temperaturamin"],
-                        "temperatura_max" => $row["temperaturamax"],
-                        "vento_direcao" => $row["ventodirecao"],
-                        "vento_max" => $row["ventomax"],
-                        "data_previsao" => $row["dataprevisao"],
+                        "tipo" => $row["tipo_previsao"],
+                        "temperatura_min" => $row["temperatura_min"],
+                        "temperatura_max" => $row["temperatura_max"],
+                        "vento_direcao" => $row["vento_direcao"],
+                        "vento_max" => $row["vento_max"],
+                        "data_previsao" => $row["dtc_previsao"],
                     );
 
                     array_push($result["previsoes"], $previsao);
@@ -113,7 +113,7 @@ $app->get('/cidades/{localidade_id}', function (Request $request, Response $resp
         }
     }else{
         return $response->withJson(array(
-            "erro" => "Parâmetro: \"id de localidade\" não passado"
+            "erro" => "Parâmetro: \"código do ibge\" não passado"
         ));
     }
 
