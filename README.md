@@ -13,7 +13,7 @@ Instale primeiramente o banco de dados **postgrSQL** que contenha o bando de dad
 Depois execute na pasta do projeto:
 
 ```bash
-composer.phar start
+php composer.phar start
 ```
 
 Para modificar a porta padrão basta modificar o script *start* em *composer.json*
